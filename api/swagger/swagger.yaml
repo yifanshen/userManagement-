@@ -1,0 +1,219 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: user controller app
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /users:
+    # our controller name
+    x-swagger-router-controller: users
+    get:
+      operationId: getAll
+      description: get the users list
+      # define the type of response for Success "200" and Error
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetUsersListResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+    post:
+      operationId: save
+      description: add a new user to the list
+      # user info to be stored
+      parameters:
+        - name: username
+          description: user
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+
+
+  /users/{id}:
+    # our controller name
+    x-swagger-router-controller: users
+    get:
+      operationId: getOne
+      description: get a user
+      # define the type of response for Success "200" and Error
+      parameters:
+        - name: id
+          type: string
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetUserResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      operationId: update
+      description: update a user
+      # define the parameters
+      parameters:
+        - name: id
+          description: Movie id
+          type: string
+          in: path
+          required: true
+        - name: username
+          description: user properties
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      operationId: delUser
+      description: delete a user
+      # define the parameters
+      parameters:
+        - name: id
+          description: User id
+          type: string
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+# complex objects have schema definitions
+definitions:
+
+  UserAction:
+    type: object
+    properties:
+      action:
+        type: string
+        description: user action type
+        enum:
+          - login
+          - logout
+          - search
+          - adduser
+          - updateuser
+          - deleteuser
+
+
+
+  User:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+      email:
+        type: string
+        default: example@gmail.com
+      phone:
+        type: string
+        default: '0000000000'
+      role:
+        type: string
+        enum: [user, poweruser, admin]
+        description: Role 
+      lastLogin:
+        type: string
+        description: Last time the user logged in
+      actions:
+        type: array
+        items:
+          $ref: '#/definitions/UserAction'
+
+    required:
+      - username
+      - password
+      - role
+
+
+  GetUsersListResponse:
+      required:
+        - users
+      properties:
+        # The array of movies
+        users:
+          type: array
+          items: 
+            type: object
+            properties:
+              id:
+                type: string
+              user:
+                $ref: '#/definitions/User'
+
+
+  GeneralResponse:
+    type: object
+    properties:
+      success:
+        type: number
+        description: returns 1 if successful
+      description:
+        type: string
+        description: a short comment 
+    required:
+      - success
+      - description
+
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+
+  GetUserResponse:
+    required:
+      - user
+    properties:
+      user:
+        $ref: '#/definitions/UserAction'
