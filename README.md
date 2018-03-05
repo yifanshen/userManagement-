@@ -1,4 +1,4 @@
-This is a full stack web application. Swagger is applied for REST API design. A js "DB" was created to provide the database service. The backend is implemented with express.js and the fronted is implemented with react.js. It uses the proxy module to connect the backend and frontend. Basic CRUD operations are implemented. Some bugs exist and need to be correct. Wish this structure could be helpful somehow. 
+This is a full stack web application. Swagger is applied for REST API design. A js "DB" was created to provide the database service. The backend is implemented with express.js and the fronted is implemented with react.js. It uses the proxy module to connect the backend and frontend. Basic CRUD operations are implemented. Some bugs exist and need to be corrected. Wish this structure could be helpful somehow. 
 
 
 Install server and client dependencies
